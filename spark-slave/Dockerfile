@@ -1,5 +1,10 @@
 FROM spark-config
 
-COPY scripts /usr/bin/.
+COPY slave.sh /usr/bin/.
+RUN chmod a+x /usr/bin/slave.sh
 
-ENTRYPOINT ["/usr/bin/bootstrap.sh"]
+ENV SPARK_MASTER_URL "spark://spark-master:7077"
+
+EXPOSE 8081
+
+CMD ["/usr/bin/slave.sh"]

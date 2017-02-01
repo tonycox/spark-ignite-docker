@@ -1,5 +1,8 @@
 FROM spark-config
 
-COPY scripts /usr/bin/.
+COPY master.sh /usr/bin/.
+RUN chmod a+x /usr/bin/master.sh
 
-ENTRYPOINT ["/usr/bin/bootstrap.sh"]
+EXPOSE 7077 6066 8080
+
+CMD ["/usr/bin/master.sh"]

@@ -1,12 +1,23 @@
-# maintainer Anton Solovev ""
+# Configuration of Java-8 Spark-1.6.3-hadoop-2.6 on top of ubuntu
 #
-#
-FROM ubuntu:14.04
+# Author Anton Solovev 
+
+FROM ubuntu:16.04
+
+LABEL maintainer "https://github.com/tonycox"
+LABEL version="1.0"
+
+# To skip interactive events while building
+ARG DEBIAN_FRONTEND=noninteractive
+
+# Temp vars
+ARG SPARK_VERSION=spark-1.6.3
+ARG HADOOP_VERSION=hadoop2.6
 
 # Install
 RUN apt-get update && \
   apt-get -y upgrade && \
-  apt-get install -y curl git unzip vim wget && \
+  apt-get install -y curl git unzip vim wget apt-utils software-properties-common && \
   apt-get clean && \
   rm -rf /var/lib/apt/lists/*
 
@@ -14,26 +25,26 @@ RUN apt-get update && \
 ENV HOME /root
 
 # Install Java
-RUN \
-  echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+RUN echo oracle-java8-installer shared/accepted-oracle-license-v1-1 select true | \
+  debconf-set-selections && \
   add-apt-repository -y ppa:webupd8team/java && \
   apt-get update && \
   apt-get install -y oracle-java8-installer && \
   rm -rf /var/lib/apt/lists/* && \
   rm -rf /var/cache/oracle-jdk8-installer
 
+# RUN apt-get-install -y python3 python3-setuptools python3-pip
+# ENV PYTHONHASHSEED 1
+
 # Define commonly used JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 
 # Download Spark package
-ADD http://d3kbcqa49mib13.cloudfront.net/spark-1.6.3-bin-hadoop2.6.tgz /tmp/
+ADD http://d3kbcqa49mib13.cloudfront.net/${SPARK_VERSION}-bin-${HADOOP_VERSION}.tgz /tmp/
 
 # Unpack spark into /opt and set SPARK_HOME
 RUN mkdir -p /opt/
-RUN tar -xzf /tmp/spark-1.4.0-bin-hadoop2.6.tgz -C /opt/
-ENV SPARK_HOME /opt/spark-1.4.0-bin-hadoop2.6
+RUN tar -xzf /tmp/${SPARK_VERSION}-bin-${HADOOP_VERSION}.tgz -C /opt/
+ENV SPARK_HOME /opt/${SPARK_VERSION}-bin-${HADOOP_VERSION}
 
 ENV PATH $PATH:${SPARK_HOME}/sbin/:${SPARK_HOME}/bin
-
-# Spark ports
-EXPOSE 7077 6066 8080 8081

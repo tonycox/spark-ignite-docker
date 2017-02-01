@@ -3,11 +3,14 @@ version: '2.0'
 services:
   spark-config:
     build: .
+    image: spark-config
 
-  spark-master:  
-    build: spark-master
-    hostname: spark-master-host
-    depends_on: 
+  spark-master:
+    build: spark-master/.
+    image: spark-master
+    hostname: spark-master
+    container_name: spark-master
+    links: 
       - spark-config
     ports:
       # Spark master WebUI port
@@ -15,19 +18,16 @@ services:
       # Spark master job submission port
       - "7077:7077"
     cpu_shares: 3000
-    mem_limit: 2g
+    mem_limit: 1g
   
   spark-slave:
-    build: spark-slave
-    hostname: spark-slave-host
-    depends_on: 
-      - spark-config
+    build: spark-slave/.
+    image: spark-slave
     links: 
+      - spark-config
       - spark-master
-    environment:
-      - MASTER_HOSTNAME=spark-master-host
     cpu_shares: 3000
-    mem_limit: 2g
+    mem_limit: 1g
 
   ignite-node:
     image: apacheignite/ignite
