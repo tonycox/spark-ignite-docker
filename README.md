@@ -2,9 +2,9 @@
 ##start spark master, worker and ignite node
 
 ```
-docker-compose up -d
+docker-compose up
 ```
-**scale mode**
+**scale mode:**
 ```
 docker-compose scale spark-master=1 spark-slave=2 ignite-node=2
 ```
@@ -14,14 +14,21 @@ docker kill $(docker ps -q)
 ```
 **spark submit:**
 ```
-docker run spark-config spark-submit \
+docker exec -v <volume-folder> \
+  spark-master spark-submit \
   --class <main-class> \
   --master spark://spark-master:7077 \
   <application-jar> \
   [application-arguments]
 ```
-**spark shell**, get ip from `docker exec -it spark-master ip addr show`
+
+**spark shell:**
 ```
-docker run spark-conf spark-shell \
-  --master spark://<ip>:7077
+docker exec -it spark-master spark-shell \
+  --master spark://spark-master:7077
 ```
+get ip:
+```
+docker exec -it spark-master ip addr show
+```
+

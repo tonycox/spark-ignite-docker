@@ -18,7 +18,7 @@ services:
       # Spark master job submission port
       - "7077:7077"
     cpu_shares: 3000
-    mem_limit: 1g
+    mem_limit: 2g
   
   spark-slave:
     build: spark-slave/.
@@ -27,7 +27,7 @@ services:
       - spark-config
       - spark-master
     cpu_shares: 3000
-    mem_limit: 1g
+    mem_limit: 2g
 
   ignite-node:
     image: apacheignite/ignite

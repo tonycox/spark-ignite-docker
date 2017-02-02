@@ -2,4 +2,4 @@
 
 # Start spark worker service
 start-slave.sh $SPARK_MASTER_URL
-exec tail -f $SPARK_HOME/logs/*
+# exec tail -f $SPARK_HOME/logs/*
