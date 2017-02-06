@@ -1,4 +1,4 @@
-FROM spark-config
+FROM tonycox/spark-ignite
 
 COPY slave.sh /usr/bin/.
 RUN chmod a+x /usr/bin/slave.sh

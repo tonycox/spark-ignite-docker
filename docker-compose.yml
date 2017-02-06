@@ -1,9 +1,9 @@
 version: '2.0'
 
 services:
-  spark-config:
-    build: .
-    image: spark-config
+#  spark-config:
+#    build: ./spark-ignite
+#    image: spark-ignite
 
   spark-master:
     build: spark-master/.
@@ -11,7 +11,7 @@ services:
     hostname: spark-master
     container_name: spark-master
     depends_on:
-      - spark-config
+      - tonycox/spark-ignite
     # temp solving
     ports:
       # Spark master WebUI port
@@ -25,7 +25,7 @@ services:
     build: spark-slave/.
     image: spark-slave
     depends_on:
-      - spark-config
+      - tonycox/spark-ignite
     links:
       - spark-master
     cpu_shares: 3000
