@@ -10,8 +10,9 @@ services:
     image: spark-master
     hostname: spark-master
     container_name: spark-master
-    links: 
+    depends_on:
       - spark-config
+    # temp solving
     ports:
       # Spark master WebUI port
       - "8080:8080"
@@ -23,13 +24,9 @@ services:
   spark-slave:
     build: spark-slave/.
     image: spark-slave
-    links: 
+    depends_on:
       - spark-config
+    links:
       - spark-master
     cpu_shares: 3000
     mem_limit: 2g
-
-  ignite-node:
-    image: apacheignite/ignite
-    links:
-      - spark-config

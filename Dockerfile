@@ -13,6 +13,7 @@ ARG DEBIAN_FRONTEND=noninteractive
 # Temp vars
 ARG SPARK_VERSION=spark-1.6.3
 ARG HADOOP_VERSION=hadoop2.6
+ARG IGNITE_VERSION=1.8.0
 
 # Install
 RUN apt-get update && \
@@ -42,9 +43,17 @@ ENV JAVA_HOME /usr/lib/jvm/java-8-oracle
 # Download Spark package
 ADD http://d3kbcqa49mib13.cloudfront.net/${SPARK_VERSION}-bin-${HADOOP_VERSION}.tgz /tmp/
 
-# Unpack spark into /opt and set SPARK_HOME
+# Download ignite
+ADD http://apache-mirror.rbc.ru/pub/apache//ignite/${IGNITE_VERSION}/apache-ignite-fabric-${IGNITE_VERSION}-bin.zip /tmp/
+
 RUN mkdir -p /opt/
+
+# Unpack spark into /opt and set SPARK_HOME
 RUN tar -xzf /tmp/${SPARK_VERSION}-bin-${HADOOP_VERSION}.tgz -C /opt/
 ENV SPARK_HOME /opt/${SPARK_VERSION}-bin-${HADOOP_VERSION}
 
-ENV PATH $PATH:${SPARK_HOME}/sbin/:${SPARK_HOME}/bin
+# Unpack ignite /opt and set IGNITE_HOME
+RUN unzip /tmp/apache-ignite-fabric-${IGNITE_VERSION}-bin.zip -d /opt/
+ENV IGNITE_HOME /opt/apache-ignite-fabric-${IGNITE_VERSION}-bin
+
+ENV PATH $PATH:${SPARK_HOME}/sbin/:${SPARK_HOME}/bin:${IGNITE_HOME}/bin
